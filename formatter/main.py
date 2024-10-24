@@ -36,7 +36,7 @@ class Formatter:
 
         self._group_result()
         self._remove_color()
-        self._remove_same_col()
+        # self._remove_same_col()  # Removed by using cells merge in sheet.main
 
     def _group_result(self) -> None:
         """
@@ -69,23 +69,31 @@ class Formatter:
     def _remove_same_col(self) -> None:
         """
         Remove same values in cols.
+
+        # ! Unused
         """
         LOGGER.info("Removing same cols")
-        previons_product = {}
+        prev_name = ""
+        prev_version = ""
+        prev_memory = ""
 
         for product in self.products:
-            if not previons_product or self._is_products_matched_wo_price(product, previons_product):
-                previons_product = deepcopy(product)
-
-            if previons_product.get("name") == product.get("name"):
+            product_name = product.get("name")
+            if prev_name != product_name:
+                prev_name = product_name
+            else:
                 product.update({"name": ""})
 
             product_version = product.get("version")
-            if not product_version or previons_product.get("version") == product_version:
+            if prev_version != product_version:
+                prev_version = product_version
+            else:
                 product.update({"version": ""})
 
             product_memory = product.get("memory")
-            if not product_version and previons_product.get("memory") == product_memory:
+            if prev_memory != product_memory:
+                prev_memory = product_memory
+            else:
                 product.update({"memory": ""})
 
         LOGGER.info("Cols cleared")
