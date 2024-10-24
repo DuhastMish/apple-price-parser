@@ -40,7 +40,7 @@ class TableWorker:
             LOGGER.info("Worksheet not found")
             LOGGER.info("Creating worksheet")
             worksheet = self.table.add_worksheet(
-                title=work_sheet_name, rows=self.ROWS_COUNT, cols=20
+                title=work_sheet_name, rows=self.ROWS_COUNT, cols=20, index=0
             )
             worksheet.update(
                 [
@@ -94,7 +94,7 @@ class TableWorker:
         Clear cols before insert.
         """
         LOGGER.info("Clear worksheet")
-        right_corner_index = string.ascii_uppercase.index(self.RIGHT_TABLE_CORNER)
+        right_corner_index = string.ascii_uppercase.index(self.RIGHT_TABLE_CORNER) + 1
         requests = [
             {
                 "unmergeCells": {
@@ -171,10 +171,10 @@ class TableWorker:
         """
         LOGGER.info("Merging same values")
 
-        # Added empty row for correct determine the last one
+        # Added an empty row to correctly identify the last elements
         rows.append([])
 
-        right_corner_index = string.ascii_uppercase.index(self.RIGHT_TABLE_CORNER)
+        right_corner_index = string.ascii_uppercase.index(self.RIGHT_TABLE_CORNER) + 1
         for col_idx, col_letter in enumerate(
             string.ascii_uppercase[:right_corner_index]
         ):
