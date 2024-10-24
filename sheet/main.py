@@ -183,7 +183,7 @@ class TableWorker:
 
             prev_row_value = None
             for rows_idx, row in enumerate(rows):
-                row_value = get_elem(row, col_idx)
+                row_value = get_elem(row, col_idx, with_error=False)
 
                 if prev_row_value != row_value:
                     prev_row_value = row_value
