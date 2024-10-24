@@ -165,14 +165,14 @@ class TableWorker:
 
         return rows_to_update
 
-    def _merge_same_values_in_cols(self, rows: list[dict]) -> None:
+    def _merge_same_values_in_cols(self, rows: list[list]) -> None:
         """
         Merge same values in cols to one.
         """
         LOGGER.info("Merging same values")
 
         # Added empty row for correct determine the last one
-        rows.append({})
+        rows.append([])
 
         right_corner_index = string.ascii_uppercase.index(self.RIGHT_TABLE_CORNER)
         for col_idx, col_letter in enumerate(
