@@ -3,7 +3,6 @@ Google sheet table worker.
 """
 
 import string
-import time
 from datetime import datetime
 
 import gspread
@@ -193,7 +192,9 @@ class TableWorker:
                 row_value = get_elem(row, col_idx, with_error=False)
                 product_version = get_elem(row, 1, with_error=False)
 
-                if prev_row_value != row_value or (prev_product_version != product_version and col_idx != 0):
+                if prev_row_value != row_value or (
+                    prev_product_version != product_version and col_idx != 0
+                ):
                     prev_row_value = row_value
                     prev_product_version = product_version
                     if cells_sub_range:
@@ -205,26 +206,36 @@ class TableWorker:
             if not cells_idx_to_merge:
                 continue
 
+            requests = []
             for sub_range in cells_idx_to_merge:
-                time.sleep(2)
-                first_index = get_elem(sub_range, 0)
+                first_index = get_elem(sub_range, 0) - 1
                 last_index = get_elem(sub_range, -1) + 1
 
-                self.worksheet.merge_cells(
-                    f"{col_letter}{first_index}:{col_letter}{last_index}",
-                    merge_type="MERGE_ALL",
+                requests.append(
+                    {
+                        "mergeCells": {
+                            "range": {
+                                "sheetId": self.worksheet.id,
+                                "startRowIndex": first_index,
+                                "endRowIndex": last_index,
+                                "startColumnIndex": col_idx,
+                                "endColumnIndex": col_idx + 1,
+                            },
+                            "mergeType": "MERGE_ALL",
+                        }
+                    }
                 )
 
                 # ! Adding borders for first two cols
                 if col_idx > 1:
                     continue
 
-                requests = [
+                requests.append(
                     {
                         "updateBorders": {
                             "range": {
                                 "sheetId": self.worksheet.id,
-                                "startRowIndex": first_index - 1,
+                                "startRowIndex": first_index,
                                 "endRowIndex": last_index,
                                 "startColumnIndex": col_idx,
                                 "endColumnIndex": right_corner_index,
@@ -234,8 +245,12 @@ class TableWorker:
                             "left": {"style": "SOLID"},
                             "bottom": {"style": "SOLID"},
                         }
-                    },
-                ]
-                self.worksheet.spreadsheet.batch_update({"requests": requests})
+                    }
+                )
+
+            if not requests:
+                continue
+
+            self.worksheet.spreadsheet.batch_update({"requests": requests})
 
         LOGGER.info("Values merged")

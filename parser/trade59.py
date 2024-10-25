@@ -31,12 +31,7 @@ class Trade59Parser(BaseParser):
         Return result.
         """
         result = self._parse()
-        result.sort(
-            key=lambda product: (
-                product.get("version"),
-                product.get("memory"),
-            )
-        )
+        result.sort(key=lambda product: (product.get("version")))
 
         return result
 

@@ -45,12 +45,7 @@ class iPointParser(BaseParser):
         Return result.
         """
         result = self._parse()
-        result.sort(
-            key=lambda product: (
-                product.get("version"),
-                product.get("memory"),
-            )
-        )
+        result.sort(key=lambda product: (product.get("version")))
 
         return result
 
@@ -80,7 +75,9 @@ class iPointParser(BaseParser):
                 found_price_raw: Tag = found_product.find("span", {"class": "price"})
                 found_price = re.search(r"\d+", found_price_raw.text) or ""
                 found_memory = self._find_in_title(found_product, product_memory)
-                found_title = self._find_in_title(found_product, f"{product_version} {product_memory}")
+                found_title = self._find_in_title(
+                    found_product, f"{product_version} {product_memory}"
+                )
 
                 if not found_title:
                     continue

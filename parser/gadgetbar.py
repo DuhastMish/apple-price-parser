@@ -31,12 +31,7 @@ class GadgetBarParser(BaseParser):
         Return result.
         """
         result = self._parse()
-        result.sort(
-            key=lambda product: (
-                product.get("version"),
-                product.get("memory"),
-            )
-        )
+        result.sort(key=lambda product: (product.get("version")))
 
         return result
 
@@ -65,14 +60,18 @@ class GadgetBarParser(BaseParser):
                 prev_search_args = search_args
 
             for found_product in found_products:
-                found_price_raw: Tag = found_product.find("span", {"class": "product-item-price-current"})
+                found_price_raw: Tag = found_product.find(
+                    "span", {"class": "product-item-price-current"}
+                )
                 found_price = re.search(r"\d+", found_price_raw.text) or ""
 
                 is_lla = self._find_in_title(found_product, "(LL/A)")
                 if is_lla:
                     continue
 
-                found_version = self._find_in_title(found_product, f"{product_version} {product_memory}")
+                found_version = self._find_in_title(
+                    found_product, f"{product_version} {product_memory}"
+                )
                 if not found_version:
                     continue
 
@@ -148,18 +147,15 @@ class GadgetBarParser(BaseParser):
             "зеленый": "Green",
             "розовый": "Pink",
             "(PRODUCT)RED": "Red",
-
             "темная ночь": "Midnight",
             "голубой": "Blue",
             "фиолетовый": "Purple",
             "желтый": "Yellow",
             "красный": "Red",
-
             "черный космос": "Space Black",
             "серебристый": "Silver",
             "золотой": "Gold",
             "глубокий фиолетовый": "Deep Purple",
-
         }
 
         return colors_map.get(color) or color

@@ -1,6 +1,7 @@
 """
 Formatter for result.
 """
+
 from copy import deepcopy
 
 from config import PRODUCTS
@@ -24,7 +25,6 @@ class Formatter:
         self.products.sort(
             key=lambda product: (
                 product.get("version"),
-                product.get("memory"),
                 product.get("trade59") or 0,
                 product.get("ipoint") or 0,
                 product.get("swype59") or 0,
@@ -135,7 +135,11 @@ class Formatter:
 
     def _is_products_matched_wo_price(self, product_1: dict, product_2: dict) -> bool:
         keys_to_check = ["product", "version", "memory"]
-        product_1_copy = {key: value for key, value in product_1.items() if key in keys_to_check}
-        product_2_copy = {key: value for key, value in product_2.items() if key in keys_to_check}
+        product_1_copy = {
+            key: value for key, value in product_1.items() if key in keys_to_check
+        }
+        product_2_copy = {
+            key: value for key, value in product_2.items() if key in keys_to_check
+        }
 
         return product_1_copy == product_2_copy

@@ -45,12 +45,7 @@ class ConnectParser(BaseParser):
         Return result.
         """
         result = self._parse()
-        result.sort(
-            key=lambda product: (
-                product.get("version"),
-                product.get("memory"),
-            )
-        )
+        result.sort(key=lambda product: (product.get("version")))
 
         return result
 
@@ -115,7 +110,9 @@ class ConnectParser(BaseParser):
         if not found_products_list:
             return []
 
-        found_products: list[Tag] = (found_products_list.find_all("form", {"class": "product-card"}) or [])
+        found_products: list[Tag] = (
+            found_products_list.find_all("form", {"class": "product-card"}) or []
+        )
 
         return [product.get("data-product-id") for product in found_products]
 

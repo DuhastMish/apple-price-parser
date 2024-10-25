@@ -1,6 +1,7 @@
 """
 Runs parser.
 """
+
 import asyncio
 import time
 from formatter.main import Formatter
@@ -38,12 +39,7 @@ async def main():
     AppZoneParser(product_to_parse).get()
     GadgetBarParser(product_to_parse).get()
 
-    product_to_parse.sort(
-        key=lambda product: (
-            product.get("version"),
-            product.get("memory"),
-        )
-    )
+    product_to_parse.sort(key=lambda product: (product.get("version")))
 
     Formatter(product_to_parse).format()
 

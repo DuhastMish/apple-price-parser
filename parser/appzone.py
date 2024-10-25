@@ -45,12 +45,7 @@ class AppZoneParser(BaseParser):
         Return result.
         """
         result = self._parse()
-        result.sort(
-            key=lambda product: (
-                product.get("version"),
-                product.get("memory"),
-            )
-        )
+        result.sort(key=lambda product: (product.get("version")))
 
         return result
 
@@ -76,8 +71,12 @@ class AppZoneParser(BaseParser):
                 prev_product_link = product_link
 
             for found_product in found_products:
-                found_price_raw: Tag = (found_product.find("div", {"class": "product-card__price"}) or {})
-                found_price = re.search(r"\d+", found_price_raw.text.replace(" ", "")) or ""
+                found_price_raw: Tag = (
+                    found_product.find("div", {"class": "product-card__price"}) or {}
+                )
+                found_price = (
+                    re.search(r"\d+", found_price_raw.text.replace(" ", "")) or ""
+                )
 
                 found_memory = self._find_in_title(found_product, product_memory)
                 if not found_memory:
@@ -125,7 +124,9 @@ class AppZoneParser(BaseParser):
         if not found_products_list:
             return []
 
-        found_products: list[Tag] = (found_products_list.find_all("div", {"class": "product-card"}) or [])
+        found_products: list[Tag] = (
+            found_products_list.find_all("div", {"class": "product-card"}) or []
+        )
 
         return found_products
 
@@ -140,13 +141,11 @@ class AppZoneParser(BaseParser):
             "зеленый": "Green",
             "розовый": "Pink",
             "(PRODUCT)RED": "Red",
-
             "темная ночь": "Midnight",
             "голубой": "Blue",
             "фиолетовый": "Purple",
             "желтый": "Yellow",
             "красный": "Red",
-
         }
 
         return colors_map.get(color) or color
