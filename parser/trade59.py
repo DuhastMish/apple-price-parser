@@ -40,7 +40,7 @@ class Trade59Parser(BaseParser):
         Search products by args.
         """
         # Уснули чтобы не закидать запросами.
-        # time.sleep(1)
+        time.sleep(1)
         page = requests.get(self.SITE + self.SEARCH_PATH + search_args, timeout=1000)
         soup = BeautifulSoup(page.content, "html.parser")
         found_products_list: Tag = (
