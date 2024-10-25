@@ -1,8 +1,8 @@
 """
 Runs parser.
 """
-
 import asyncio
+import time
 from formatter.main import Formatter
 from parser.appzone import AppZoneParser
 from parser.connect import ConnectParser
@@ -28,6 +28,8 @@ async def main():
     scheduled_tasks = Scheduler()
     scheduled_tasks.run()
 
+    start_time = time.time()
+
     product_to_parse = create_base_products_list()
     Trade59Parser(product_to_parse).get()
     iPointParser(product_to_parse).get()
@@ -46,6 +48,8 @@ async def main():
     Formatter(product_to_parse).format()
 
     TableWorker().insert(product_to_parse)
+
+    LOGGER.info(f"Paring completed for {round(time.time() - start_time)}")
 
 
 if __name__ == "__main__":
