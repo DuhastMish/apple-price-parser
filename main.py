@@ -32,11 +32,11 @@ async def main():
 
     product_to_parse = create_base_products_list()
     Trade59Parser(product_to_parse).get()
+    ConnectParser(product_to_parse).get()
     iPointParser(product_to_parse).get()
     Swype59Parser(product_to_parse).get()
     AppZoneParser(product_to_parse).get()
     GadgetBarParser(product_to_parse).get()
-    ConnectParser(product_to_parse).get()
 
     product_to_parse.sort(
         key=lambda product: (

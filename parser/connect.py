@@ -93,7 +93,7 @@ class ConnectParser(BaseParser):
 
                     product.update({"connect": to_int(to_float(variant.get("price")))})
 
-        LOGGER.info(f"Parsing doone for {round(time.time() - start_time)} sec.")
+        LOGGER.info(f"Parsing done for {round(time.time() - start_time)} sec.")
 
         return self.products
 

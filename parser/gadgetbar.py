@@ -93,7 +93,7 @@ class GadgetBarParser(BaseParser):
                 found_price = to_int(found_price.group()) or 0
                 product.update({"gadgetbar": found_price})
 
-        LOGGER.info(f"Parsing doone for {round(time.time() - start_time)} sec.")
+        LOGGER.info(f"Parsing done for {round(time.time() - start_time)} sec.")
 
         return self.products
 
@@ -102,7 +102,7 @@ class GadgetBarParser(BaseParser):
         Search products by args.
         """
         # Уснули чтобы не закидать запросами.
-        time.sleep(1)
+        # time.sleep(1)
 
         page = requests.get(self.SITE + self.SEARCH_PATH + search_args, timeout=1000)
         soup = BeautifulSoup(page.content, "html.parser")

@@ -100,7 +100,7 @@ class iPointParser(BaseParser):
                 found_price = to_int(found_price.group()) or 0
                 product.update({"ipoint": found_price})
 
-        LOGGER.info(f"Parsing doone for {round(time.time() - start_time)} sec.")
+        LOGGER.info(f"Parsing done for {round(time.time() - start_time)} sec.")
         return self.products
 
     def _search_product(self, search_args: str, nav_limit: int = 200) -> list[Tag]:

@@ -23,7 +23,7 @@ class TableWorker:
     """
 
     TABLE_KEY = "1VYEuq_WXf5S01SwjJkerxM_FgshVYKIFmb8CVKLGDKk"
-    RIGHT_TABLE_CORNER = "K"
+    RIGHT_TABLE_CORNER = "J"
     ROWS_COUNT = 300
 
     def __init__(self):
@@ -49,17 +49,17 @@ class TableWorker:
                         "Версия",
                         "Память",
                         "Цвет",
-                        "eSim",
+                        # "eSim",
                         "Trade59",
+                        "Connect",
                         "iPoint",
                         "Swype59",
                         "AppZone",
                         "GadgetBar",
-                        "Connect",
                         "Минимальная цена",
                     ]
                 ],
-                "A1:L1",
+                "A1:K1",
             )
             worksheet.format("A1:Z1", {"textFormat": {"bold": True}})
             LOGGER.info("Worksheet created")
@@ -106,7 +106,22 @@ class TableWorker:
                         "endColumnIndex": right_corner_index,
                     }
                 }
-            }
+            },
+            {
+                "updateBorders": {
+                    "range": {
+                        "sheetId": self.worksheet.id,
+                        "startRowIndex": 1,
+                        "endRowIndex": self.ROWS_COUNT,
+                        "startColumnIndex": 0,
+                        "endColumnIndex": right_corner_index,
+                    },
+                    "top": {"style": "NONE"},
+                    "right": {"style": "NONE"},
+                    "left": {"style": "NONE"},
+                    "bottom": {"style": "NONE"},
+                }
+            },
         ]
         self.worksheet.spreadsheet.batch_update({"requests": requests})
         self.worksheet.batch_clear([f"A2:{self.RIGHT_TABLE_CORNER}{self.ROWS_COUNT}"])
@@ -116,10 +131,8 @@ class TableWorker:
         """
         Iserting rows as is.
         """
-        overall_range = len(rows)
-
         LOGGER.info("Inserting rows")
-        previons_product = {}
+
         rows_to_update: list[list] = []
         for idx, product in enumerate(rows):
             index = idx + 2
@@ -127,16 +140,6 @@ class TableWorker:
             product_version: str = product.get("version")
             product_memory: int = product.get("memory")
             product_color: str = product.get("color")
-            product_esim: str = "Да" if product.get("is_esim") else ""
-
-            if previons_product.get("name") == product_name:
-                product_name = ""
-
-            if previons_product.get("version") == product_version:
-                product_version = ""
-
-            if not product_version and previons_product.get("memory") == product_memory:
-                product_memory = ""
 
             rows_to_update.append(
                 [
@@ -144,16 +147,18 @@ class TableWorker:
                     product_version,
                     product_memory,
                     product_color,
-                    product_esim,
+                    # "Да" if product.get("is_esim") else "",
                     product.get("trade59") or "",
+                    product.get("connect") or "",
                     product.get("ipoint") or "",
                     product.get("swype59") or "",
                     product.get("appzone") or "",
                     product.get("gadgetbar") or "",
-                    product.get("connect") or "",
                     f"=MIN(F{index}:{self.RIGHT_TABLE_CORNER}{index})",
                 ]
             )
+
+        overall_range = len(rows)
         self.worksheet.update(
             rows_to_update,
             f"A2:L{overall_range + 1}",
@@ -181,12 +186,16 @@ class TableWorker:
             cells_idx_to_merge: list[list[int]] = []
             cells_sub_range: list[int] = []
 
+            prev_product_version = None
+
             prev_row_value = None
             for rows_idx, row in enumerate(rows):
                 row_value = get_elem(row, col_idx, with_error=False)
+                product_version = get_elem(row, 1, with_error=False)
 
-                if prev_row_value != row_value:
+                if prev_row_value != row_value or (prev_product_version != product_version and col_idx != 0):
                     prev_row_value = row_value
+                    prev_product_version = product_version
                     if cells_sub_range:
                         cells_idx_to_merge.append(cells_sub_range)
                     cells_sub_range = []
@@ -197,8 +206,36 @@ class TableWorker:
                 continue
 
             for sub_range in cells_idx_to_merge:
-                time.sleep(1)
-                cells_range = f"{col_letter}{get_elem(sub_range, 0)}:{col_letter}{get_elem(sub_range, -1) + 1}"
-                self.worksheet.merge_cells(cells_range, merge_type="MERGE_ALL")
+                time.sleep(2)
+                first_index = get_elem(sub_range, 0)
+                last_index = get_elem(sub_range, -1) + 1
+
+                self.worksheet.merge_cells(
+                    f"{col_letter}{first_index}:{col_letter}{last_index}",
+                    merge_type="MERGE_ALL",
+                )
+
+                # ! Adding borders for first two cols
+                if col_idx > 1:
+                    continue
+
+                requests = [
+                    {
+                        "updateBorders": {
+                            "range": {
+                                "sheetId": self.worksheet.id,
+                                "startRowIndex": first_index - 1,
+                                "endRowIndex": last_index,
+                                "startColumnIndex": col_idx,
+                                "endColumnIndex": right_corner_index,
+                            },
+                            "top": {"style": "SOLID"},
+                            "right": {"style": "SOLID"},
+                            "left": {"style": "SOLID"},
+                            "bottom": {"style": "SOLID"},
+                        }
+                    },
+                ]
+                self.worksheet.spreadsheet.batch_update({"requests": requests})
 
         LOGGER.info("Values merged")
