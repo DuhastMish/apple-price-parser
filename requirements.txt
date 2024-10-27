@@ -1,3 +1,4 @@
 apscheduler
 asyncio
 beautifulsoup4
+gspread
