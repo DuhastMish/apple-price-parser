@@ -32,9 +32,9 @@ class Scheduler:
         """
         Create regular tasks.
         """
-        self.scheduler.add_job(self.regular_parse, "cron", hour=10)
-        self.scheduler.add_job(self.regular_parse, "cron", hour=14)
-        self.scheduler.add_job(self.regular_parse, "cron", hour=20)
+        self.scheduler.add_job(self.regular_parse, "cron", hour=8)
+        self.scheduler.add_job(self.regular_parse, "cron", hour=12)
+        self.scheduler.add_job(self.regular_parse, "cron", hour=18)
 
         self.scheduler.start()
         LOGGER.info("Regular tasks added")
