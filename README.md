@@ -12,7 +12,7 @@ Apple price parser is a tool for parsing prices in Apple hardware stores.
 
 ## Tech
 
-Dillinger uses a number of open source projects to work properly:
+Parser uses a number of open source projects to work properly:
 
 - [gspread] - Working with Google Sheets
 - [Advanced Python Scheduler] - Runs parser at certain time
@@ -26,7 +26,7 @@ And of course Apple price parser itself is open source with a [public repository
 
 ## Installation
 
-Dillinger requires [Python](https://www.python.org/downloads/) 3.11.2+ to run.
+Parser requires [Python](https://www.python.org/downloads/) 3.11.2+ to run.
 
 Clone repo:
 ```powershell
@@ -52,7 +52,6 @@ MIT
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
    [repo]: <https://github.com/DuhastMish/apple-price-parser>
-   [git-repo-url]: <https://github.com/joemccann/dillinger.git>
    [gspread]: <https://docs.gspread.org/en/v6.1.3/>
    [Advanced Python Scheduler]: <https://apscheduler.readthedocs.io/en/3.x/index.html>
    [BeautifulSoup4]: <https://www.crummy.com/software/BeautifulSoup/>
