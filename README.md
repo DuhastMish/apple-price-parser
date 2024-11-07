@@ -1,5 +1,5 @@
 # Apple price parser
-## _Maskimov A.V._
+## _Maksimov A.V._
 
 Apple price parser is a tool for parsing prices in Apple hardware stores.
 
