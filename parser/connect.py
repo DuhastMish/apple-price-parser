@@ -56,8 +56,12 @@ class ConnectParser(BaseParser):
         start_time = time.time()
         LOGGER.info(f"Parsing {self.SITE}")
 
-        iphones_ids = self._parse_product_id("iphone")
-        iphones_json: list[dict] = self._get_products(iphones_ids)
+        try:
+            iphones_ids = self._parse_product_id("iphone")
+            iphones_json: list[dict] = self._get_products(iphones_ids)
+        except Exception as ex:
+            LOGGER.info(f"Error while getting site {self.SITE}: {ex}")
+            return self.products
 
         for product in self.products:
             product_name = product.get("name")

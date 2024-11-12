@@ -68,7 +68,11 @@ class iPointParser(BaseParser):
             product_link = self.HARDCODE.get(f"{product_name} {product_version}")
 
             if prev_product_link != product_link:
-                found_products: list[Tag] = self._search_product(product_link)
+                try:
+                    found_products: list[Tag] = self._search_product(product_link)
+                except Exception as ex:
+                    LOGGER.info(f"Error while getting site {self.SITE}: {ex}")
+                    continue
                 prev_product_link = product_link
 
             for found_product in found_products:

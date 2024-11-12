@@ -82,7 +82,12 @@ class Trade59Parser(BaseParser):
             )
 
             if search_args != prev_search_args:
-                found_products: list[Tag] = self._search_product(search_args)
+                try:
+                    found_products: list[Tag] = self._search_product(search_args)
+                except Exception as ex:
+                    LOGGER.info(f"Error while getting site {self.SITE}: {ex}")
+                    continue
+
                 prev_search_args = search_args
 
             for found_product in found_products:
